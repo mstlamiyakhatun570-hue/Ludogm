@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="bn">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="theme-color" content="#7C3AED" />
+    <meta name="description" content="Tournament Guru - বাংলাদেশের সেরা গেমিং টুর্নামেন্ট প্ল্যাটফর্ম" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Tournament Guru" />
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+
+    <title>Tournament Guru</title>
+
+    <style>
+      body { margin: 0; background: #0d0d1a; }
+      #root { min-height: 100vh; }
+
+      /* Offline banner */
+      #offline-banner {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        background: #ef4444;
+        color: white;
+        text-align: center;
+        padding: 8px;
+        font-size: 13px;
+        font-family: sans-serif;
+        z-index: 9999;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="offline-banner">📵 অফলাইন — ইন্টারনেট সংযোগ নেই</div>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <script>
+      // Register Service Worker for offline support
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js', { scope: '/' })
+            .then(reg => console.log('✅ SW registered'))
+            .catch(err => console.log('SW error:', err));
+        });
+      }
+
+      // Offline/Online detection
+      const banner = document.getElementById('offline-banner');
+      function updateOnlineStatus() {
+        if (!navigator.onLine) {
+          banner.style.display = 'block';
+          document.body.style.paddingTop = '36px';
+        } else {
+          banner.style.display = 'none';
+          document.body.style.paddingTop = '0';
+        }
+      }
+      window.addEventListener('online', updateOnlineStatus);
+      window.addEventListener('offline', updateOnlineStatus);
+      updateOnlineStatus();
+    </script>
+  </body>
+</html>
